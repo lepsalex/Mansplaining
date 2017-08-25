@@ -16,7 +16,7 @@ contract Mansplaining {
 	mapping (string => Man) scores;
 	uint8 totalPoints;
 
-	function Mansplaining() {
-		totalPoints = 100;
+	function Mansplaining(uint8 _pointsAvailable, string _menJSON) {
+		totalPoints = _pointsAvailable;
 	}
 }
