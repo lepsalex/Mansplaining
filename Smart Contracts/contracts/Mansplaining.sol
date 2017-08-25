@@ -27,7 +27,6 @@ contract Mansplaining {
 	uint8 maxPlayers = 10;
 	uint8 currentNumPlayers;
 	mapping (string => Player) scores;
-	string[] playersItr;
 
 	function newGame(uint8 pointsAvailable) {
 
@@ -40,7 +39,7 @@ contract Mansplaining {
 		totalPoints = pointsAvailable;
 	}
 
-	function addPlayer(string playerEmail, string playerName) public constant {
+	function addPlayer(string playerEmail, string playerName) public {
 
 		// Do not allow more players than max or additon of players mid game
 		require(currentNumPlayers < maxPlayers && gameState == GAME_STATE.locked);
@@ -52,7 +51,7 @@ contract Mansplaining {
 			name: playerName,
 			points: 0
 		});
-		playersItr.push(playerEmail);
+		
 		currentNumPlayers++;
 	}
 
@@ -69,13 +68,13 @@ contract Mansplaining {
 
 		// Set game to locked (until players have all been added)
 		gameState = GAME_STATE.locked;
-
-		// Since it's too costly to zero out a mapping, we instead
-		// blank the player array and use it as our mapping guide if you will
-		playersItr = new string[](0);
 	}
 
 	function getPlayerByEmail(string playerEmail) public constant returns(string, string, uint8) {
 		return (scores[playerEmail].email, scores[playerEmail].name, scores[playerEmail].points);
+	}
+
+	function getPointsAvailable() public constant returns(uint8) {
+		return totalPoints;
 	}
 }
