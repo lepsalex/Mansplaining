@@ -1,86 +1,81 @@
 pragma solidity ^0.4.4;
 
-import "jsmnsol-lib/JsmnSolLib.sol";
-
 /*
  * Mansplaining
  * A simple contract that acts as the back-end for our
- * real-world mansplaining game
+ * real-world mansplaining game scoreboard
 */
 contract Mansplaining {
 
-	struct Man {
+	struct Player {
 		string name;
 		string email;
 		uint8 points;
 	}
 
+	// We will use game state enum to control whether or not we can move points around
+	// and do any other gameplay actions
+	enum GAME_STATE {
+		locked,
+		ready
+	}
+	GAME_STATE gameState;
+
 	uint8 maxPoints = 100;
 	uint8 totalPoints;
 
-	uint8 maxPlayers = 4;
-	mapping (string => Man) scores;
+	uint8 maxPlayers = 10;
+	uint8 currentNumPlayers;
+	mapping (string => Player) scores;
 	string[] playersItr;
 
-	// Active players array?
+	function newGame(uint8 pointsAvailable) {
 
-	function newGame(uint8 pointsAvailable, string menJSON, uint8 numPlayers) {
-
-		require(pointsAvailable <= maxPoints && numPlayers <= maxPlayers);
+		require(pointsAvailable <= maxPoints);
 
 		// call reset method
 		reset();
 		
 		// Set points to points available
 		totalPoints = pointsAvailable;
-
-		// Populate players into game state
-		initPlayers(menJSON, numPlayers);
 	}
 
-	function initPlayers(string menJSON, uint8 numPlayers) {
+	function addPlayer(string playerEmail, string playerName) public constant {
 
-		// Compute JSON parse length as num players x 2 + 1
-		uint8 parseLimit = numPlayers * 2 + 1;
+		// Do not allow more players than max or additon of players mid game
+		require(currentNumPlayers < maxPlayers && gameState == GAME_STATE.locked);
 
-		uint returnValue;
-		JsmnSolLib.Token[] memory tokens;
-		uint actualNum;
+		// Save new player to mapping and also create iterable array entry for
+		// access via a loop since maps are non-iterable
+		scores[playerEmail] = Player({
+			email: playerEmail,
+			name: playerName,
+			points: 0
+		});
+		playersItr.push(playerEmail);
+		currentNumPlayers++;
+	}
 
-		(returnValue, tokens, actualNum) = JsmnSolLib.parse(menJSON, parseLimit);
-
-		// Loop through key/obj pairs
-		for (uint8 index = 1; index < tokens.length; index += 2) {
-			
-			JsmnSolLib.Token memory k = tokens[index];
-			JsmnSolLib.Token memory v = tokens[index + 1];
-			
-			string memory name = JsmnSolLib.getBytes(menJSON, k.start, k.end);
-			string memory email = JsmnSolLib.getBytes(menJSON, v.start, v.end);
-			
-			Man memory newPlayer = Man({
-				name: name,
-				email: email,
-				points: 0
-			});
-
-			// Save new Man to mapping and also create iterable array entry for
-			// access via a loop since maps are non-iterable
-			scores[name] = newPlayer;
-			playersItr.push(name);
-		}
+	// Unlocks game for play if conditions met
+	function startGame() public constant {
+		require(currentNumPlayers >= 1);
+		gameState = GAME_STATE.ready;
 	}
 
 	// Reset contract state
 	function reset() {
 		totalPoints = 0;
+		currentNumPlayers = 0;
+
+		// Set game to locked (until players have all been added)
+		gameState = GAME_STATE.locked;
 
 		// Since it's too costly to zero out a mapping, we instead
 		// blank the player array and use it as our mapping guide if you will
 		playersItr = new string[](0);
 	}
 
-	function getPlayerPoints(string playerName) returns(uint8) {
-		return scores[playerName].points;
+	function getPlayerByEmail(string playerEmail) public constant returns(string, string, uint8) {
+		return (scores[playerEmail].email, scores[playerEmail].name, scores[playerEmail].points);
 	}
 }
