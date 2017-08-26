@@ -1,80 +1,26 @@
 pragma solidity ^0.4.4;
 
+import './Mortal.sol';
+import './MPGame.sol';
+
 /*
  * Mansplaining
  * A simple contract that acts as the back-end for our
  * real-world mansplaining game scoreboard
 */
-contract Mansplaining {
+contract Mansplaining is Mortal {
 
-	struct Player {
-		string name;
-		string email;
-		uint8 points;
+	event GameOver(address indexed gameAddress);
+	
+	// Create new game contract
+	function createGame(uint8 initPoints) returns (address) {
+        return new MPGame(initPoints);
 	}
 
-	// We will use game state enum to control whether or not we can move points around
-	// and do any other gameplay actions
-	enum GAME_STATE {
-		locked,
-		ready
-	}
-	GAME_STATE gameState;
-
-	uint8 maxPoints = 100;
-	uint8 totalPoints;
-
-	uint8 maxPlayers = 10;
-	uint8 currentNumPlayers;
-	mapping (string => Player) scores;
-
-	function newGame(uint8 pointsAvailable) {
-
-		require(pointsAvailable <= maxPoints);
-
-		// call reset method
-		reset();
-		
-		// Set points to points available
-		totalPoints = pointsAvailable;
-	}
-
-	function addPlayer(string playerEmail, string playerName) public {
-
-		// Do not allow more players than max or additon of players mid game
-		require(currentNumPlayers < maxPlayers && gameState == GAME_STATE.locked);
-
-		// Save new player to mapping and also create iterable array entry for
-		// access via a loop since maps are non-iterable
-		scores[playerEmail] = Player({
-			email: playerEmail,
-			name: playerName,
-			points: 0
-		});
-		
-		currentNumPlayers++;
-	}
-
-	// Unlocks game for play if conditions met
-	function startGame() public constant {
-		require(currentNumPlayers >= 1);
-		gameState = GAME_STATE.ready;
-	}
-
-	// Reset contract state
-	function reset() {
-		totalPoints = 0;
-		currentNumPlayers = 0;
-
-		// Set game to locked (until players have all been added)
-		gameState = GAME_STATE.locked;
-	}
-
-	function getPlayerByEmail(string playerEmail) public constant returns(string, string, uint8) {
-		return (scores[playerEmail].email, scores[playerEmail].name, scores[playerEmail].points);
-	}
-
-	function getPointsAvailable() public constant returns(uint8) {
-		return totalPoints;
+	// Destroy game and all players creatd by game
+	function endGame(address instance) {
+		MPGame game = MPGame(instance);
+        game.kill();
+		GameOver(instance);
 	}
 }
