@@ -10,11 +10,13 @@ import './MPGame.sol';
 */
 contract Mansplaining is Mortal {
 
+	event NewGame(address indexed gameAddress);
 	event GameOver(address indexed gameAddress);
 	
 	// Create new game contract
-	function createGame(uint8 initPoints) returns (address) {
-        return new MPGame(initPoints);
+	function createGame(uint8 initPoints) {
+        MPGame newGame = new MPGame(initPoints);
+		NewGame(newGame);
 	}
 
 	// Destroy game and all players creatd by game

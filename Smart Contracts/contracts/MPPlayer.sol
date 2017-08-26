@@ -14,4 +14,16 @@ contract MPPlayer is Mortal {
         name = playerName;
         colour = playerColour;
     }
+
+    function getEmail() public constant returns(bytes32) {
+        return email;
+    }
+
+    function getName() public constant returns(bytes32) {
+        return name;
+    }
+
+    function getColour() public constant returns(bytes6) {
+        return colour;
+    }
 }
