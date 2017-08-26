@@ -2,7 +2,4 @@
 build
 
 # Note files
-TESTRPC
-
-# Private
-users.js
+NOTES
