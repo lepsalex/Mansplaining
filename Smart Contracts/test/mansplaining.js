@@ -1,18 +1,6 @@
+const eventPromise = require('./helpers/contractTestHelpers').eventPromise;
 const Mansplaining = artifacts.require("./Mansplaining.sol");
 const MPGame = artifacts.require("./MPGame.sol");
-
-const eventPromise = (event, cb) => {
-    return new Promise((resolve, reject) => {
-        event.watch((err, result) => {
-            if (!err) {                
-                event.stopWatching();
-                resolve(result);
-            } else {
-                reject(err);
-            }
-        });
-    });
-};
 
 contract('Mansplaining', accounts => {
 
