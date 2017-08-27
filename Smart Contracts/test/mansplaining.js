@@ -75,9 +75,7 @@ contract('Mansplaining', accounts => {
 
             Promise.all(testPromises)
                 .then(resolvedPromises => {
-                    setTimeout(() => {
-                        return expectThrow(gameInstance.addPlayer("nonono@gmail.com", "NONONO", "000000"));
-                    }, 500);
+                    expectThrow(gameInstance.addPlayer("nonono@gmail.com", "NONONO", "000000"));
                     done();
                 });
         });
