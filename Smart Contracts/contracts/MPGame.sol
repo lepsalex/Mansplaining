@@ -39,7 +39,7 @@ contract MPGame is Mortal {
 		gameState = GAME_STATE.locked;
     }
 
-    function addPlayer(bytes32 playerEmail, bytes32 playerName, bytes6 playerColour) public {
+    function addPlayer(bytes32 playerEmail, bytes32 playerName, bytes6 playerColour) {
 
 		// Do not allow more players than max or additon of players mid game
 		require(currentNumPlayers < maxPlayers && gameState == GAME_STATE.locked);
@@ -54,24 +54,28 @@ contract MPGame is Mortal {
         PlayerAdded(newPlayer, maxPlayers - currentNumPlayers);
 	}
 
-    function awardPoint(address player) public {
+    function getPlayerAddress(bytes32 email) constant returns(address) {
+        return players[email];
+    }
+
+    function awardPoint(address player) {
         require(gameState == GAME_STATE.ready && gamePoints > 0);
         gamePoints--;
         scores[player]++;
     }
 
-    function getPlayerAddress(bytes32 email) public returns(address) {
-        return players[email];
+    function getPointsBalance() constant returns(uint8) {
+        return gamePoints;
     }
 
     // Unlocks game for play if conditions met
-	function startGame() public {
+	function startGame() {
 		require(currentNumPlayers >= 1);
 		gameState = GAME_STATE.ready;
         GameReady(true);
 	}
 
-    function kill() public {
+    function kill() {
         // Kill all players created during game
         for (uint8 index = 0; index < playersIter.length; index++) {
             MPPlayer player = MPPlayer(playersIter[index]);
