@@ -109,31 +109,24 @@ contract('Mansplaining', accounts => {
     it("should award specified player one point", done => {
         MPGame.new(initPoints).then(gameInstance => {
             let setupPromises = [];
-            let activePlayers = [];
-
-            setupPromises.push(eventPromise(gameInstance.PlayerAdded(), result => {
-                activePlayers.push(result.args);
-            }));
 
             setupPromises.push(gameInstance.addPlayer("zero@gmail.com", "Zero", "f0f0f0"));
             setupPromises.push(gameInstance.addPlayer("one@gmail.com", "One", "a1a1a1"));
 
             Promise.all(setupPromises)
                 .then(resolvedPromises => {
-                    const { event } = resolvedPromises[0];
-                    event.stopWatching();
                     return gameInstance.startGame();
                 })
                 .then(() => {
                     const testPromises = [];
-                    testPromises.push(eventPromise(gameInstance.PointReceived()));
-                    testPromises.push(gameInstance.awardPoint(activePlayers[0].email));
+                    testPromises.push(eventPromise(gameInstance.PointReceived()));                    
+                    testPromises.push(gameInstance.awardPoint("zero@gmail.com"));
                     return Promise.all(testPromises);
                 })
                 .then(resolvedPromises => {
                     const { event, result } = resolvedPromises[0];
                     event.stopWatching();                    
-                    assert.equal(result.args.playerAddress, activePlayers[0].email, "Correct Player");
+                    assert.equal(result.args.playerEmail, "zero@gmail.com", "Correct Player");
                     assert.equal(result.args.playerScore, 1, "Player balance is now equal to 1");
                     done();
                 });
@@ -143,20 +136,13 @@ contract('Mansplaining', accounts => {
     it("should not award points if game has not started", done => {
         MPGame.new(initPoints).then(gameInstance => {
             let setupPromises = [];
-            let activePlayers = [];
-
-            setupPromises.push(eventPromise(gameInstance.PlayerAdded(), result => {
-                activePlayers.push(result.args);
-            }));
-
+            
             setupPromises.push(gameInstance.addPlayer("zero@gmail.com", "Zero", "f0f0f0"));
             setupPromises.push(gameInstance.addPlayer("one@gmail.com", "One", "a1a1a1"));
 
             Promise.all(setupPromises)
-                .then(resolvedPromises => {
-                    const { event } = resolvedPromises[0];
-                    event.stopWatching();
-                    expectThrow(gameInstance.awardPoint(activePlayers[0].email), done);
+                .then(() => {
+                    expectThrow(gameInstance.awardPoint("zero@gmail.com"), done);
                 });
         });
     });
@@ -164,59 +150,62 @@ contract('Mansplaining', accounts => {
     it("should not award points if gamePoints are depleted", done => {
         MPGame.new(0).then(gameInstance => {
             let setupPromises = [];
-            let activePlayers = [];
-
-            setupPromises.push(eventPromise(gameInstance.PlayerAdded(), result => {
-                activePlayers.push(result.args);
-            }));
 
             setupPromises.push(gameInstance.addPlayer("zero@gmail.com", "Zero", "f0f0f0"));
             setupPromises.push(gameInstance.addPlayer("one@gmail.com", "One", "a1a1a1"));
 
             Promise.all(setupPromises)
-                .then(resolvedPromises => {
-                    const { event } = resolvedPromises[0];
-                    event.stopWatching();
+                .then(() => {
                     return gameInstance.startGame()
                 })
                 .then(() => {
-                    expectThrow(gameInstance.awardPoint(activePlayers[0].email), done);
+                    expectThrow(gameInstance.awardPoint("zero@gmail.com"), done);
                 });
         });
     });
 
-    it("should return points balance and playerAddress given an email", done => {
+    it("should return points balance given an active player email", done => {
         MPGame.new(initPoints).then(gameInstance => {
             let setupPromises = [];
-            let activePlayers = [];
 
-            setupPromises.push(eventPromise(gameInstance.PlayerAdded(), result => {
-                activePlayers.push(result.args);
-            }));
-
-            // Had to flip around order of these as the test readds the first player sometimes
-            // and results in zero balance even though it does actually work ... life on the frontier ...
-            setupPromises.push(gameInstance.addPlayer("one@gmail.com", "One", "a1a1a1"));
             setupPromises.push(gameInstance.addPlayer("zero@gmail.com", "Zero", "f0f0f0"));
+            setupPromises.push(gameInstance.addPlayer("one@gmail.com", "One", "a1a1a1"));
 
             Promise.all(setupPromises)
-                .then(resolvedPromises => {
-                    const { event } = resolvedPromises[0];
-                    event.stopWatching();
+                .then(() => {
                     return gameInstance.startGame();
                 })
                 .then(() => {
-                    return gameInstance.awardPoint(activePlayers[0].email);
+                    return gameInstance.awardPoint("zero@gmail.com");
                 })
                 .then(() => {
                     return gameInstance.getPlayerPoints("zero@gmail.com");
                 })
                 .then(response => {
-                    assert.equal(response[0], 1, "Player balance is now equal to 1");
-                    assert.isString(response[1], "Player address is returned");
+                    assert.equal(response, 1, "Player balance is now equal to 1");
                     done(); 
                 });
         });
     });
 
+    it("should end game on kill command", done => {
+        let gameAddress;
+
+        MPGame.new(initPoints).then(gameInstance => {
+            gameAddress = gameInstance.address;
+            return gameInstance.kill();            
+        })
+        .then(() => {
+            // We are expecting and error since there should be no contract at address
+            process.prependOnceListener('uncaughtException', () => {
+                done();
+            });
+            process.nextTick(() => {
+                MPGame.at(gameAddress)
+                .then(() => {
+                    next();
+                });
+            });
+        });
+    });
 });
