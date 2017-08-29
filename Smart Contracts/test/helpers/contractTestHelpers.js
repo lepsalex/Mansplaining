@@ -30,11 +30,10 @@ function eventPromise(event, cb = null) {
 * zeppelin-solidity/test/helpers/expectThrow.js
 * https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/test/helpers/expectThrow.js
 */
-function expectThrow(promise) {
+function expectThrow(promise, done) {
     promise.then(() => {
-        console.log('1');
-        
         assert.fail('Expected throw not received');
+        done();
     })
     .catch(error => {
         // TODO: Check jump destination to destinguish between a throw
@@ -46,7 +45,7 @@ function expectThrow(promise) {
         //       testrpc log actually show an 'invalid jump' event.)
         const outOfGas = error.message.search('out of gas') >= 0;
         assert(invalidOpcode || outOfGas, "Expected throw, got '" + error + "' instead");
-        return;
+        done();
     });
 };
 
