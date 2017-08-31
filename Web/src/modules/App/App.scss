@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P|Open+Sans');
+@import 'Variables';
+
 *,
 *::before,
 *::after {
@@ -7,22 +10,16 @@
 html {
   box-sizing: border-box;
   color: #464646;
-  font: 400 100%/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* stylelint-disable-line value-keyword-case */
+  font: 400 100%/1.5 'Open Sans', Roboto, Helvetica, Arial, sans-serif; /* stylelint-disable-line value-keyword-case */
 }
 
 body {
   margin: 0;
+  background-color: $pale-yellow;
 }
 
 main {
   padding: 0.5em;
-}
-
-h1 {
-  margin: 0 0 0.75em;
-  color: #546e7a;
-  font-size: 2em;
-  font-weight: 700;
 }
 
 a {
