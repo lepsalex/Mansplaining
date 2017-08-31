@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 const styles = require('./Home.scss')
 
 const Home = () => (
-  <main>
+  <main className={ styles.homeMain }>
     <Helmet title="Star a new game!" />
     <button className={ styles.newGame }>New Game<span>!!!</span></button>
   </main>
