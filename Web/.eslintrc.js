@@ -335,7 +335,7 @@ module.exports = {
     // require identifiers to match a specified regular expression
     'id-match': 0,
     // enforce consistent indentation
-    'indent': [2, 2],
+    'indent': [0, 4],
     // enforce the consistent use of either double or single quotes in JSX attributes
     'jsx-quotes': [2, 'prefer-double'],
     // enforce consistent spacing between keys and values in object literal properties
