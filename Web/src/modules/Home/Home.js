@@ -4,8 +4,8 @@ import Helmet from 'react-helmet'
 
 const Home = () => (
   <main>
-    <Helmet title="Home" />
-    <h1>Home</h1>
+    <Helmet title="Star a new game!" />
+    HOME
   </main>
 )
 

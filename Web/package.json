@@ -1,6 +1,6 @@
 {
-  "name": "universal-react-redux-boilerplate",
-  "version": "2.0.0",
+  "name": "mansplaining-score-board",
+  "version": "1.0.0",
   "description": "Step by step creation of a Universal React + Redux Boilerplate",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CrocoDillon/universal-react-redux-boilerplate.git"
+    "url": "https://github.com/CrocoDillon/mansplaining-score-board.git"
   },
   "keywords": [
     "isomorphic",
