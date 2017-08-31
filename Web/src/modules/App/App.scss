@@ -1,6 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Press+Start+2P|Open+Sans');
 @import 'Variables';
 
+@function multiple-box-shadow ($n, $colour) {
+  $value: '#{random(2000)}px #{random(2000)}px #{$colour}';
+
+  @for $i from 2 through $n {
+    $value: '#{$value} , #{random(2000)}px #{random(2000)}px #{$colour}';
+  }
+
+  @return unquote($value);
+}
+
 *,
 *::before,
 *::after {
@@ -11,11 +21,13 @@ html {
   box-sizing: border-box;
   color: #464646;
   font: 400 100%/1.5 'Open Sans', Roboto, Helvetica, Arial, sans-serif; /* stylelint-disable-line value-keyword-case */
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, $pale-yellow 0%, darken($pale-yellow, 8%) 100%);
+  overflow: hidden;
 }
 
 body {
   margin: 0;
-  background-color: $pale-yellow;
 }
 
 main {
@@ -29,4 +41,72 @@ a {
 .container {
   max-width: 80em;
   margin: 0 auto;
+}
+
+$star-colour : lighten($yellow, 30%);
+$shadows-small : multiple-box-shadow(700, $star-colour);
+$shadows-medium : multiple-box-shadow(200, $star-colour);
+$shadows-big : multiple-box-shadow(100, $star-colour);
+
+.stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: $shadows-small;
+  animation: animStar 50s linear infinite;
+    
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: $shadows-small;
+  }
+}
+    
+.stars2 {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: $shadows-medium;
+  animation: animStar 100s linear infinite;
+    
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: $shadows-medium;
+  }
+}
+    
+.stars3 {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: $shadows-big;
+  animation: animStar 150s linear infinite;
+    
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: $shadows-big;
+  }
+}
+
+@keyframes animStar {
+  0% {
+    transform: translateY(0px);
+  }	
+  100% {
+    transform: translateY(-2000px);
+  } 
 }
