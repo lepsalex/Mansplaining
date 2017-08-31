@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
 
-import { reducer as blog } from './modules/Blog'
+import { reducer as game } from './modules/Home'
 
 const reducer = combineReducers({
-  blog
+  game
 })
 
 export default reducer
