@@ -419,7 +419,7 @@ module.exports = {
     // enforce consistent line breaks inside braces
     'object-curly-newline': 0,
     // enforce consistent spacing inside braces
-    'object-curly-spacing': [2, 'always'],
+    'object-curly-spacing': [0, 'always'],
     // enforce placing object properties on separate lines
     'object-property-newline': 0,
     // enforce variables to be declared either together or separately in functions
@@ -527,7 +527,7 @@ module.exports = {
     // require symbol descriptions
     'symbol-description': 0,
     // require or disallow spacing around embedded expressions of template strings
-    'template-curly-spacing': [2, 'always'],
+    'template-curly-spacing': [0, 'always'],
     // require or disallow spacing around the * in yield* expressions
     'yield-star-spacing': [2, { before: false, after: true }],
 
@@ -613,7 +613,7 @@ module.exports = {
     // validate closing bracket location in JSX
     'react/jsx-closing-bracket-location': 2,
     // enforce or disallow spaces inside of curly braces in JSX attributes
-    'react/jsx-curly-spacing': [2, 'always'],
+    'react/jsx-curly-spacing': [0, 'always'],
     // enforce or disallow spaces around equal signs in JSX attributes
     'react/jsx-equals-spacing': [2, 'never'],
     // restrict file extensions that may contain JSX
