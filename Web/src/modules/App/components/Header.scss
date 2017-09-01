@@ -14,7 +14,7 @@ $darkest-blue: darken($blue, 4%);
 
   .title {
     display: inline-block;
-    font: 400 2em/1.5 'Press Start 2P', Roboto, Helvetica, Arial, sans-serif; /* stylelint-disable-line value-keyword-case */
+    font: 400 2em/1.5; /* stylelint-disable-line value-keyword-case */
     margin: 5em 0;
     position: relative;
     -webkit-transform: rotate(-10deg) skew(-10deg, 0);

@@ -1,19 +1,25 @@
 // @flow
 import React from 'react'
-import { string, bool, func, object, shape } from 'prop-types'
+import { string, bool, func, shape } from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Helmet from 'react-helmet'
 
-import { startGame, getGameState } from './redux'
+import { newGame, getGameManagerState } from './redux'
 
-const styles = require('./Home.scss')
+export const Home = (props: Object) => {
+  const styles = require('./Home.scss')
 
-const Home = (props: Object) => {
-  const { newGame } = props
+  const { startNewGame, history } = props
+
+  const onNewGameClick = () => startNewGame(history)
+
   return (
     <main className={ styles.homeMain }>
       <Helmet title="Star a new game!" />
-      <button onClick={ newGame } className={ styles.newGame }>New Game<span>!!!</span></button>
+      <div className={ styles.gameContainer }>
+        <button onClick={ onNewGameClick } className={ styles.newGame }>New Game!</button>
+      </div>
     </main>
   )
 }
@@ -21,20 +27,23 @@ const Home = (props: Object) => {
 Home.displayName = 'Home'
 
 Home.propTypes = {
-  newGame: func.isRequired,
-  game: shape({
+  startNewGame: func.isRequired,
+  gameManager: shape({
     loading: bool.isRequired,
     gameAddress: string.isRequired,
     error: string
+  }).isRequired,
+  history: shape({
+    push: func.isRequired
   }).isRequired
 }
 
 const mapStateToProps = state => ({
-  game: getGameState(state)
+  gameManager: getGameManagerState(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  newGame: () => startGame(dispatch)
+  startNewGame: history => newGame(dispatch, history)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home))
