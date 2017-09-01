@@ -24,7 +24,7 @@ html {
   color: #464646;
   font: 400 100%/1.5 'Press Start 2P', Roboto, Helvetica, Arial, sans-serif; /* stylelint-disable-line value-keyword-case */
   height: 100%;
-  background: radial-gradient(ellipse at bottom, $pale-yellow 0%, darken($pale-yellow, 8%) 100%);
+  background: radial-gradient(ellipse at bottom, $pale-yellow 2%, $blue 100%);
   overflow: hidden;
 }
 
