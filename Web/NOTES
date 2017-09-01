@@ -1,0 +1,6 @@
+- Mansplaining contract needs to be loaded into state on homepage load
+    - use dataLoader for that and load it directly into redux
+
+- Look at this for reference: https://github.com/truffle-box/react-box/blob/master/src/App.js
+
+- Check you tests for relevant functions as they are already built and just need to be ported over and adapated
