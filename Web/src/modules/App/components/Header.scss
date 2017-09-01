@@ -54,7 +54,7 @@ $darkest-blue: darken($blue, 4%);
 
     span {
       background: $blue;
-      box-shadow: 0 0 0 .2em $pale-yellow;
+      box-shadow: 0 0 0 .2em lighten($blue, 6%);
       color: $yellow;
       padding: 1em;
       position: relative;
