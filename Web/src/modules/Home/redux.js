@@ -13,7 +13,7 @@ const gameAsyncError = payloadActionGenerator(NEW_GAME_FAILURE)
 /*
 * Public async thunk actions
 */
-export function startGame(dispatch) {
+export function newGame(dispatch, history) {
   
   dispatch(gameAsyncStart())
 
@@ -21,28 +21,30 @@ export function startGame(dispatch) {
   return createNewGameContract()
     .then(response => {
       dispatch(gameAsyncSuccess(response))
+      history.push(`/game/${response}`)
     })
     .catch(error => {
-      dispatch(gameAsyncError(error))
+      console.log(error)
+      dispatch(gameAsyncError("Error"))
     })
 }
 
 /*
 * Public State Getters
 */
-export function getGameState(state) {
-  return state.game
+export function getGameManagerState(state) {
+  return state.gameManager
 }
 
 /*
 * Game Reducer
 */
-const _gameState = {
+const _gameManagerState = {
   loading: false,
   gameAddress: '',
   error: null
 }
-const reducer = (state = _gameState, action) => {
+const reducer = (state = _gameManagerState, action) => {
 
   switch (action.type) {
 
@@ -63,7 +65,6 @@ const reducer = (state = _gameState, action) => {
         error: action.payload,
         loading: false
       }
-
   }
 
   return state

@@ -1,0 +1,13 @@
+@import '../App/Variables';
+@import '../App/Placeholders';
+
+.notFoundMain {
+    text-align: center;
+    padding-top: 5em;
+}
+
+.gameContainer {
+    @extend %gameContainer;
+    max-width: 600px;
+    color: $white;
+}

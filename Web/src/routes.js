@@ -1,5 +1,5 @@
 // @flow
-import { App, Home, Blog, BlogIndex, BlogArticle, NotFound } from './modules'
+import { App, Home, Game, NotFound } from './modules'
 
 const routes = [
   {
@@ -11,23 +11,9 @@ const routes = [
         exact: true
       },
       {
-        path: '/blog',
-        component: Blog,
-        routes: [
-          {
-            path: '/blog',
-            component: BlogIndex,
-            exact: true
-          },
-          {
-            path: '/blog/:slug',
-            component: BlogArticle,
-            exact: true
-          },
-          {
-            component: NotFound
-          }
-        ]
+        path: '/game/:address',
+        component: Game,
+        exact: true
       },
       {
         component: NotFound
